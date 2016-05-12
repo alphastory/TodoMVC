@@ -22,10 +22,14 @@
 
       <section id="main">
         <ul id="todo-list">
-          {{#each todo in model}}
-            <li {{bind-attr class="todo.isCompleted:completed"}}>
-              <input type="checkbox" class="toggle" />
-              <label>{{todo.title}}</label><button class="destroy"></button>
+          {{#each todo in model itemController="todo"}}
+            <li {{bind-attr class="todo.isCompleted:completed todo.isEditing:editing"}}>
+              {{#if todo.isEditing}}
+                {{edit-todo class="edit" value=todo.title focus-out="acceptChanges" insert-newline="acceptChanges"}}
+              {{else}}
+                {{input type="checkbox" checked=todo.isCompleted class="toggle"}}
+                <label {{action "editTodo" on="doubleClick"}}>{{todo.title}}</label><button class="destroy"></button>
+              {{/if}}
             </li>
           {{/each}}
         </ul>
@@ -35,7 +39,7 @@
 
       <footer id="footer">
         <span id="todo-count">
-          <strong>2</strong> todos left</span>
+          <strong>{{remaining}}</strong> {{inflection}} left</span>
         <ul id="filters">
           <li>
             <a href="all" class="selected">All</a>
@@ -66,9 +70,12 @@
   <script src="http://emberjs.com.s3.amazonaws.com/getting-started/ember-data.js"></script>
   <script src="js/application.js"></script>
   <script src="js/router.js"></script>
+  <!-- Todo/Todos -->
   <script src="js/routes/todo.js"></script>
   <script src="js/models/todo.js"></script>
   <script src="js/controllers/todos_controller.js"></script>
+  <script src="js/controllers/todo_controller.js"></script>
+  <script src="js/views/edit_todo_view.js"></script>
   <!-- to activate the test runner, add the "?test" query string parameter -->
   <script src="tests/runner.js"></script>
 </body>
